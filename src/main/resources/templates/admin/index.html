@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{master.html}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Administrar Libros</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+
+		<h2>Libros</h2>
+		<div class="text-end">
+			<a href="/admin/libros/nuevo" class="btn btn-primary mb-3">
+				Agregar libro
+			</a>
+		</div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Libro</th>
+					<th>Publicacion</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item : ${page.content}" th:object="${libro}">
+					<td style="width:150px;">
+						<a th:href="@{/assets/{filename}(filename=${item.rutaPortada})}" data-fancybox>
+							<img th:src="@{/assets/{filename}(filename=${item.rutaPortada})}" alt=""
+								class="img-thumbnail w-100">
+						</a>
+					</td>
+					<td>
+						<div th:text="${item.titulo}" class="fs-5 fw-bold"></div>
+						<p th:text="${item.descripcion}"></p>
+						<div>
+							<span class="badge rounded-pill bg-light text-dark me-1" th:each="genero : ${item.generos}"
+								th:text="${genero.titulo}"></span>
+						</div>
+					</td>
+					<td th:text="${#temporals.format(item.fechaPublicacion,'dd/MM/yyyy')}"></td>
+					<td></td>
+					<td class="text-end">
+						<a th:href="@{/admin/libros/{id}/editar(id=${item.id})}">Editar</a>
+						<a href="javascript:void(0)" class="text-danger ms-3"
+							th:onclick="'eliminarLibro(' + ${item.id} +')'">Eliminar</a>
+						<form th:id="'eliminarLibroForm' + ${item.id}"
+							th:action="@{/admin/libros/{id}/eliminar(id=${item.id})}" method="post" class="d-none">
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+		<p>
+			Mostrando <span th:text="${page.size}"></span> de <span th:text="${page.totalElements}"></span> registros
+		</p>
+		<nav aria-label="Page navigation" class="d-flex justify-content-between">
+			<div>
+				<select id="pageSize" name="size" class="form-control" onchange="changePageSize()">
+					<option th:each="size : ${pageSizeOptions}" th:value="${size}" th:text="${size}"
+						th:selected="${page.size == size}"></option>
+				</select>
+			</div>
+			<ul class="pagination mb-0">
+				<li class="page-item" th:classappend="${page.first} ? 'disabled' : ''"><a class="page-link"
+						th:href="@{'?page=0&size=' + ${page.size}}">Primera</a>
+				</li>
+
+				<li class="page-item" th:classappend="${page.first} ? 'disabled' : ''"><a class="page-link"
+						th:with="prevPage=${page.number - 1}"
+						th:href="@{'?page=' + ${prevPage} + '&size=' + ${page.size}}">Ant</a>
+				</li>
+
+				<li class="page-item" th:each="i : ${pageNumbers}"
+					th:classappend="${i == page.number + 1} ? 'active' : ''"><a class="page-link"
+						th:with="pageNum=${i - 1}" th:href="@{'?page=' + ${pageNum} + '&size=' + ${page.size}}"
+						th:text="${i}"></a>
+				</li>
+
+				<li class="page-item" th:classappend="${page.last} ? 'disabled' : ''"><a class="page-link"
+						th:with="nextPage=${page.number + 1}"
+						th:href="@{'?page=' + ${nextPage} + '&size=' + ${page.size}}">Sig</a>
+
+				<li class="page-item" th:classappend="${page.last} ? 'disabled' : ''"><a class="page-link"
+						th:with="lastPage=${page.totalPages - 1}"
+						th:href="@{'?page=' + ${lastPage} + '&size=' + ${page.size}}">Última</a>
+				</li>
+
+			</ul>
+		</nav>
+	</div>
+
+	<div layout:fragment="scripts">
+		<script>
+			function eliminarLibro(id) {
+				if (!confirm('¿Estás seguro de eliminar este libro?')) {
+					return;
+				}
+				$('#eliminarLibroForm' + id).submit();
+			}
+
+			function changePageSize() {
+				const pageSize = document.getElementById("pageSize").value;
+				const currentPage = [[${page.number}]];
+				window.location.href = "?page=" + currentPage + "&size=" + pageSize;
+			} 
+		</script>
+	</div>
+</body>
+
+</html>

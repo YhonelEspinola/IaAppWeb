@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{master.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:inline="text">Libros</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <h4>Todos los libros</h4>
+
+        <div class="row">
+            <div class="col-md-3 my-5" th:each="libro : ${ultimosLibros}" th:object="${libro}">
+                <a th:href="@{/libros/{id}(id=${libro.id})}" class="card shadow-lg text-decoration-none">
+                    <img th:src="@{/assets/{filename}(filename=${libro.rutaPortada})}" th:alt="${libro.titulo}" class="card-img-top">
+                    <div class="card-body">
+                        <h2 class="card-title fs-6" th:text="${libro.titulo}"></h2>
+                        <p th:text="${#temporals.format(libro.fechaPublicacion, 'dd/MM/yyyy')}" class="text-muted small"></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+

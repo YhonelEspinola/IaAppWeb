@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Registro de libros</title>
+
+<body>
+	
+	<div layout:fragment="form">
+		
+		<br>
+		<form action="" method="post" th:object="${libro}" enctype="multipart/form-data">
+			<div class="mb-3">
+				<label for="titulo" class="form-label">Titulo :</label>
+				<input type="text" id="titulo" placeholder="Digite el titulo" class="form-control" th:field="*{titulo}">
+				<div class="invalid-feedback" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}">
+
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="descripcion" class="form-label">Descripcion :</label>
+				<textarea type="text" id="descripcion" placeholder="Digite la descripcion" class="form-control"
+					th:field="*{descripcion}"></textarea>
+				<div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}">
+
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="fechaPublicacion" class="form-label">Fecha de publicacion :</label>
+				<input type="date" id="fechaPublicacion" placeholder="Digite la fecha de publicacion"
+					class="form-control" th:field="*{fechaPublicacion}">
+				<div class="invalid-feedback" th:if="${#fields.hasErrors('fechaPublicacion')}"
+					th:errors="*{fechaPublicacion}">
+
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="libroLink" class="form-label">Libro ID :</label>
+				<input type="text" id="libroLink" placeholder="Digite el libro ID" class="form-control"
+					th:field="*{libroLink}">
+				<div class="invalid-feedback" th:if="${#fields.hasErrors('libroLink')}" th:errors="*{libroLink}">
+
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="portada" class="form-label">Portada :</label>
+				<input type="file" name="portada" id="portada" class="form-control" th:field="*{portada}">
+				<div class="invalid-feedback" th:if="${#fields.hasErrors('portada')}" th:errors="*{portada}">
+
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="portada" class="form-label">Genero :</label>
+				<select id="generos" class="form-control" th:field="*{generos}" multiple>
+					<option th:each="genero : ${generos}" th:value="${genero.id}" th:text="${genero.titulo}"></option>
+				</select>
+				<div class="invalid-feedback" th:if="${#fields.hasErrors('generos')}" th:errors="*{generos}">
+
+				</div>
+			</div>
+			<div class="text-end">
+				<button type="submit" class="btn btn-primary">Guardar</button>
+			</div>
+		</form>
+
+
+	</div>
+
+
+</body>
+
+</html>
